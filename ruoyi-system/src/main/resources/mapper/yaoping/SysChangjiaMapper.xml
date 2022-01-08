@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yaoping.mapper.SysChangjiaMapper">
+
+    <resultMap type="SysChangjia" id="SysChangjiaResult">
+        <result property="id"    column="id"    />
+        <result property="changjiaName"    column="changjiaName"    />
+        <result property="code"    column="code"    />
+        <result property="person"    column="person"    />
+        <result property="phone"    column="phone"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSysChangjiaVo">
+        select id, changjiaName, code, person, phone, status, create_time from sys_changjia
+    </sql>
+
+    <select id="selectSysChangjiaList" parameterType="SysChangjia" resultMap="SysChangjiaResult">
+        <include refid="selectSysChangjiaVo"/>
+        <where>
+            <if test="changjiaName != null  and changjiaName != ''"> and changjiaName like concat('%', #{changjiaName}, '%')</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="person != null  and person != ''"> and person = #{person}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectSysChangjiaById" parameterType="Long" resultMap="SysChangjiaResult">
+        <include refid="selectSysChangjiaVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysChangjia" parameterType="SysChangjia">
+        insert into sys_changjia
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="changjiaName != null">changjiaName,</if>
+            <if test="code != null">code,</if>
+            <if test="person != null">person,</if>
+            <if test="phone != null">phone,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="changjiaName != null">#{changjiaName},</if>
+            <if test="code != null">#{code},</if>
+            <if test="person != null">#{person},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysChangjia" parameterType="SysChangjia">
+        update sys_changjia
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="changjiaName != null">changjiaName = #{changjiaName},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="person != null">person = #{person},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysChangjiaById" parameterType="Long">
+        delete from sys_changjia where id = #{id}
+    </delete>
+
+    <delete id="deleteSysChangjiaByIds" parameterType="String">
+        delete from sys_changjia where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

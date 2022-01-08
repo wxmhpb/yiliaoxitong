@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yaoping.mapper.SysYaopingxinxiMapper">
+
+    <resultMap type="SysYaopingxinxi" id="SysYaopingxinxiResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="changjiaId"    column="changjia_id"    />
+        <result property="leixing"    column="leixing"    />
+        <result property="chufangleixing"    column="chufangleixing"    />
+        <result property="danwei"    column="danwei"    />
+        <result property="price"    column="price"    />
+        <result property="kucun"    column="kucun"    />
+        <result property="yujingzhi"    column="yujingzhi"    />
+        <result property="huansuan"    column="huansuan"    />
+        <result property="status"    column="status"    />
+        <association property="changjia"    column="id" javaType="SysChangjia" resultMap="changjiaResult" />
+        <association property="sysPurchase"    column="id" javaType="SysPurchase" resultMap="sysPurchaseResult" />
+    </resultMap>
+    <resultMap id="changjiaResult" type="SysChangjia">
+         <id     property="id"   column="id"     />
+         <result property="changjiaName" column="changjiaName"   />
+    </resultMap>
+    <resultMap id="sysPurchaseResult" type="SysPurchase">
+        <id     property="id"   column="id"     />
+        <result property="caigouliang" column="caigouliang"   />
+        <result property="zonge" column="zonge"   />
+        <result property="picihao" column="picihao"   />
+        <result property="createTime" column="create_time"   />
+    </resultMap>
+    <sql id="selectSysYaopingxinxiVo">
+        select id, name, code, changjia_id, leixing, chufangleixing, danwei, price, kucun, yujingzhi, huansuan, status from sys_yaopingxinxi
+    </sql>
+
+    <select id="selectSysYaopingxinxiList" parameterType="SysYaopingxinxi" resultMap="SysYaopingxinxiResult">
+       select yao.id,yao.name,yao.code,ch.changjiaName,yao.leixing,yao.chufangleixing,yao.danwei,yao.price,yao.kucun,yao.yujingzhi,
+              yao.huansuan,yao.status from sys_yaopingxinxi yao
+              left join sys_changjia ch on yao.changjia_id = ch.id
+    </select>
+
+    <select id="selectSysYaopingxinxiList1" parameterType="SysYaopingxinxi" resultMap="SysYaopingxinxiResult">
+        select yao.id,yao.name,yao.kucun,yao.yujingzhi,ch.changjiaName,yao.leixing,yao.chufangleixing,yao.danwei,
+               yao.huansuan from sys_yaopingxinxi yao
+                                                    left join sys_changjia ch on yao.changjia_id = ch.id
+    </select>
+    <select id="selectSysYaopingxinxiList2" parameterType="SysYaopingxinxi" resultMap="SysYaopingxinxiResult">
+        select y.id,y.name,p.caigouliang,p.zonge,p.picihao,ch.changjiaName,y.leixing,y.chufangleixing,p.create_time
+        from sys_yaopingxinxi y
+                     inner join sys_purchase p on y.id=p.yao_id
+                     inner join sys_changjia ch on y.changjia_id = ch.id
+    </select>
+
+    <select id="selectSysYaopingxinxiById" parameterType="Long" resultMap="SysYaopingxinxiResult">
+        <include refid="selectSysYaopingxinxiVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysYaopingxinxi" parameterType="SysYaopingxinxi">
+        insert into sys_yaopingxinxi
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="code != null">code,</if>
+            <if test="changjiaId != null">changjia_id,</if>
+            <if test="leixing != null">leixing,</if>
+            <if test="chufangleixing != null">chufangleixing,</if>
+            <if test="danwei != null">danwei,</if>
+            <if test="price != null">price,</if>
+            <if test="kucun != null">kucun,</if>
+            <if test="yujingzhi != null">yujingzhi,</if>
+            <if test="huansuan != null">huansuan,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="code != null">#{code},</if>
+            <if test="changjiaId != null">#{changjiaId},</if>
+            <if test="leixing != null">#{leixing},</if>
+            <if test="chufangleixing != null">#{chufangleixing},</if>
+            <if test="danwei != null">#{danwei},</if>
+            <if test="price != null">#{price},</if>
+            <if test="kucun != null">#{kucun},</if>
+            <if test="yujingzhi != null">#{yujingzhi},</if>
+            <if test="huansuan != null">#{huansuan},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysYaopingxinxi" parameterType="SysYaopingxinxi">
+        update sys_yaopingxinxi
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="changjiaId != null">changjia_id = #{changjiaId},</if>
+            <if test="leixing != null">leixing = #{leixing},</if>
+            <if test="chufangleixing != null">chufangleixing = #{chufangleixing},</if>
+            <if test="danwei != null">danwei = #{danwei},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="kucun != null">kucun = #{kucun},</if>
+            <if test="yujingzhi != null">yujingzhi = #{yujingzhi},</if>
+            <if test="huansuan != null">huansuan = #{huansuan},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysYaopingxinxiById" parameterType="Long">
+        delete from sys_yaopingxinxi where id = #{id}
+    </delete>
+
+    <delete id="deleteSysYaopingxinxiByIds" parameterType="String">
+        delete from sys_yaopingxinxi where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yaoping.mapper.SysPurchaseMapper">
+
+    <resultMap type="SysPurchase" id="SysPurchaseResult">
+        <result property="id"    column="id"    />
+        <result property="danId"    column="danId"    />
+        <result property="gongId"    column="gong_id"    />
+        <result property="zonge"    column="zonge"    />
+        <result property="status"    column="status"    />
+        <result property="person"    column="person"    />
+        <result property="operator"    column="operator"    />
+        <result property="rukuTime"    column="ruku_time"    />
+        <result property="createTime"    column="create_time"    />
+        <association property="sysGongyingshang" column="id" javaType="SysGongyingshang" resultMap="sysGongyingshangResult"></association>
+    </resultMap>
+
+    <resultMap id="sysGongyingshangResult" type="SysGongyingshang">
+    <id     property="id"   column="id"     />
+    <result property="gongName" column="gongName"   />
+    </resultMap>
+
+    <sql id="selectSysPurchaseVo">
+        select id, danId,gong_id, zonge, status, person, operator, ruku_time, create_time from sys_purchase
+    </sql>
+
+    <select id="selectSysPurchaseList" parameterType="SysPurchase" resultMap="SysPurchaseResult">
+        select p.id,p.danId,g.gongName,p.zonge,p.status,p.person,p.operator,p.ruku_time,p.create_time from sys_purchase p
+        left join sys_gongyingshang g on p.gong_id = g.id
+    </select>
+
+    <select id="selectSysPurchaseById" parameterType="Long" resultMap="SysPurchaseResult">
+        <include refid="selectSysPurchaseVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysPurchase" parameterType="SysPurchase">
+        insert into sys_purchase
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="danId != null">danId,</if>
+            <if test="gongId != null">gong_id,</if>
+            <if test="zonge != null">zonge,</if>
+            <if test="status != null">status,</if>
+            <if test="person != null">person,</if>
+            <if test="operator != null">operator,</if>
+            <if test="rukuTime != null">ruku_time,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="danId != null">#{danId},</if>
+            <if test="gongId != null">#{gongId},</if>
+            <if test="zonge != null">#{zonge},</if>
+            <if test="status != null">#{status},</if>
+            <if test="person != null">#{person},</if>
+            <if test="operator != null">#{operator},</if>
+            <if test="rukuTime != null">#{rukuTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysPurchase" parameterType="SysPurchase">
+        update sys_purchase
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="danId != null">danId = #{danId},</if>
+            <if test="gongId != null">gong_id = #{gongId},</if>
+            <if test="zonge != null">zonge = #{zonge},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="person != null">person = #{person},</if>
+            <if test="operator != null">operator = #{operator},</if>
+            <if test="rukuTime != null">ruku_time = #{rukuTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysPurchaseById" parameterType="String">
+        delete from sys_purchase where id = #{id}
+    </delete>
+
+    <delete id="deleteSysPurchaseByIds" parameterType="String">
+        delete from sys_purchase where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
