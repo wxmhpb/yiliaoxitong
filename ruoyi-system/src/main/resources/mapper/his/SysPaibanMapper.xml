@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.his.mapper.SysPaibanMapper">
+
+    <resultMap type="SysPaiban" id="SysPaibanResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="datetime"    column="datetime"    />
+        <result property="banci"    column="banci"    />
+        <association property="sysDept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
+    </resultMap>
+
+    <sql id="selectSysPaibanVo">
+        select id, name, dept_id, datetime, banci from sys_paiban
+    </sql>
+    <resultMap id="deptResult" type="SysDept">
+        <id     property="deptId"   column="dept_id"     />
+        <result property="deptName" column="dept_name"   />
+
+    </resultMap>
+
+    <select id="selectSysBanciList" parameterType="java.lang.Integer" resultType="com.ruoyi.his.domain.SysBanci">
+       select sys_banci.id,sys_banci.name from sys_banci
+    </select>
+
+    <select id="selectSysPaibanList" parameterType="SysPaiban" resultMap="SysPaibanResult">
+       select p.id,p.name,d.dept_name,p.datetime,p.banci from sys_paiban p
+       inner join sys_dept d on d.dept_id=p.dept_id
+    </select>
+    <select id="selectSysPaibanList1" parameterType="SysPaiban" resultMap="SysPaibanResult">
+        select p.id,p.name,d.dept_name,p.datetime,p.banci from sys_paiban p
+        inner join sys_dept d on d.dept_id=p.dept_id and p.name='雪梅'
+    </select>
+
+    <select id="selectSysPaibanById" parameterType="Long" resultMap="SysPaibanResult">
+        <include refid="selectSysPaibanVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysPaiban" parameterType="SysPaiban" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_paiban
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="datetime != null">datetime,</if>
+            <if test="banci != null">banci,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="datetime != null">#{datetime},</if>
+            <if test="banci != null">#{banci},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysPaiban" parameterType="SysPaiban">
+        update sys_paiban
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="datetime != null">datetime = #{datetime},</if>
+            <if test="banci != null">banci = #{banci},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysPaibanById" parameterType="Long">
+        delete from sys_paiban where id = #{id}
+    </delete>
+
+    <delete id="deleteSysPaibanByIds" parameterType="String">
+        delete from sys_paiban where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

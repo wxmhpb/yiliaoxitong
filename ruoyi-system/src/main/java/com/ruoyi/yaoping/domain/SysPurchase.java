@@ -19,7 +19,7 @@ public class SysPurchase extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 单据ID */
-    private Integer id;
+    private Long id;
 
     private String danId;
 
@@ -66,11 +66,11 @@ public class SysPurchase extends BaseEntity
         return serialVersionUID;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
